@@ -1,0 +1,20 @@
+[
+  {
+    "id": "70886c60-9668-4944-9bd6-df5b1f0fd4da",
+    "title": "1st task",
+    "description": "watch fastapi video",
+    "is_completed": true
+  },
+  {
+    "id": "7f5f765b-3411-40db-86a7-5fc1775b2ad5",
+    "title": "2nd task",
+    "description": "write fastapi video code",
+    "is_completed": true
+  },
+  {
+    "id": "5df767cf-9eba-41bd-9eeb-ee90aec21046",
+    "title": "3rd task",
+    "description": "write fastapi claude example code",
+    "is_completed": true
+  }
+]

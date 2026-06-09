@@ -1,0 +1,17 @@
+from pydantic import BaseModel, Field
+from typing import Optional
+
+class TodoCreate(BaseModel):
+    title: str=Field(min_length=3,max_length=100)
+    description: str=Field(min_length=5,max_length=1000)
+
+class TodoUpdate(BaseModel):
+    title: Optional[str]=Field(default=None, max_length=100)
+    description: Optional[str]=Field(default=None, max_length=1000)
+    is_completed: Optional[bool]=None
+
+class TodoOut(BaseModel):
+    id: str
+    title: str
+    description: str
+    is_completed: bool
