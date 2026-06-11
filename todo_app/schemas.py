@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
+from bson import ObjectId
 
 class TodoCreate(BaseModel):
     title: str=Field(min_length=3,max_length=100)
@@ -15,3 +16,11 @@ class TodoOut(BaseModel):
     title: str
     description: str
     is_completed: bool
+
+def todo_helper(todo) -> dict:
+    return {
+        "id": str(todo["_id"]),
+        "title": todo["title"],
+        "description": todo["description"],
+        "is_completed": todo["is_completed"],
+    }
