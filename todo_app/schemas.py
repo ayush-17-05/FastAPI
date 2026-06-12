@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
 from bson import ObjectId
 
@@ -24,3 +24,7 @@ def todo_helper(todo) -> dict:
         "description": todo["description"],
         "is_completed": todo["is_completed"],
     }
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=72)

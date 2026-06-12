@@ -8,3 +8,4 @@ client = AsyncIOMotorClient(os.getenv("MONGO_URI"))
 db = client[os.getenv("DB_NAME")]
 
 todo_collection = db["todos"]
+user_collection = db["users"]

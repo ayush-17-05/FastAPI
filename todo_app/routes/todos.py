@@ -1,14 +1,15 @@
-from fastapi import APIRouter, HTTPException,status
+from fastapi import APIRouter, HTTPException, status, Depends
 import uuid
 from typing import Optional
 from todo_app.schemas import TodoCreate, TodoOut, TodoUpdate,todo_helper
 from todo_app.database import todo_collection
 from bson import ObjectId
+from .users import get_current_user
 
 router=APIRouter(prefix="/api/v1/todos",tags=["todos"])
 
 @router.get("/",response_model=list[TodoOut])
-async def get_todos(completed: Optional[bool] = None):
+async def get_todos(completed: Optional[bool] = None, current_user:dict=Depends(get_current_user)):
     query = {}
     if completed is not None:
         query["is_completed"] = completed
@@ -18,7 +19,7 @@ async def get_todos(completed: Optional[bool] = None):
 
 
 @router.post("/",response_model=TodoOut,status_code=status.HTTP_201_CREATED)
-async def create_todo(payload: TodoCreate):
+async def create_todo(payload: TodoCreate, current_user:dict=Depends(get_current_user)):
     new_todo={
         "title":payload.title,
         "description":payload.description,
@@ -30,7 +31,7 @@ async def create_todo(payload: TodoCreate):
 
 
 @router.get("/{todo_id}", response_model=TodoOut)
-async def get_todo(todo_id: str):
+async def get_todo(todo_id: str, current_user:dict=Depends(get_current_user)):
     todo = await todo_collection.find_one({"_id":ObjectId(todo_id)})
     if todo:
         return todo_helper(todo)
@@ -40,7 +41,7 @@ async def get_todo(todo_id: str):
     )
 
 @router.put("/{todo_id}",response_model=TodoOut)
-async def update_todo(todo_id:str, payload:TodoUpdate):
+async def update_todo(todo_id:str, payload:TodoUpdate, current_user:dict=Depends(get_current_user)):
     update_data=payload.dict(exclude_unset=True)
 
     if update_data:
@@ -55,7 +56,7 @@ async def update_todo(todo_id:str, payload:TodoUpdate):
         detail=f"Todo with ID '{todo_id}' not found",
     )
 @router.delete("/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_todo(todo_id:str):
+async def delete_todo(todo_id:str, current_user:dict=Depends(get_current_user)):
     result=await todo_collection.delete_one({"_id":ObjectId(todo_id)})
     if result.deleted_count == 1:
         return
@@ -66,7 +67,7 @@ async def delete_todo(todo_id:str):
 
 
 @router.patch("/{todo_id}/complete",status_code=status.HTTP_204_NO_CONTENT)
-async def complete_todo(todo_id:str):
+async def complete_todo(todo_id:str, current_user:dict=Depends(get_current_user)):
     result = await todo_collection.update_one(
         {"_id":ObjectId(todo_id)},
         {"$set":{"is_completed":True}}
