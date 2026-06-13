@@ -4,6 +4,7 @@ from todo_app.routes.todos import router as todos_router
 from app.middlewares.timer import timing_middleware
 from fastapi.middleware.cors import CORSMiddleware
 from todo_app.routes.users import router as users_router
+from ai_app.airoutes import router as ai_router
 
 app = FastAPI()
 
@@ -20,4 +21,4 @@ app = FastAPI()
 
 app.include_router(todos_router)
 app.include_router(users_router)
-
+app.include_router(ai_router)
