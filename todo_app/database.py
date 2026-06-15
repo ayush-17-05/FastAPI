@@ -9,3 +9,4 @@ db = client[os.getenv("DB_NAME")]
 
 todo_collection = db["todos"]
 user_collection = db["users"]
+conversation_collection = db["conversations"]
