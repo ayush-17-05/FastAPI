@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import os
 from todo_app.database import conversation_collection
 
+
+
 load_dotenv()
 
 llm = ChatGoogleGenerativeAI(
@@ -45,3 +47,25 @@ async def ask_ai(prompt: str, user_email: str, conversation_collection) -> str:
     await save_message(user_email,"ai",response,conversation_collection)
 
     return response
+
+
+from langchain_classic.prompts import PromptTemplate
+from langchain_classic.chains import LLMChain, SequentialChain
+
+summary_prompt = PromptTemplate(
+    input_variables = ["text"],
+    template = "Summarize this text in 2 sentences:\n\n{text}"
+)
+summary_chain = LLMChain(llm=llm, prompt=summary_prompt, output_key="summary")
+
+translate_prompt = PromptTemplate(
+    input_variables=["summary"],
+    template="Translate this to hindi\n\n{summary}"
+)
+translate_chain = LLMChain(llm=llm, prompt=translate_prompt, output_key="hindi_translation")
+
+overall_chain = SequentialChain(
+    chains = [summary_chain,translate_chain],
+    input_variables = ["text"],
+    output_variables = ["summary","hindi_translation"]
+)
