@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 import os
 from todo_app.database import conversation_collection
 
-
-
 load_dotenv()
 
 llm = ChatGoogleGenerativeAI(

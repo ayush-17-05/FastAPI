@@ -4,6 +4,7 @@ from todo_app.routes.users import get_current_user
 from .ai import ask_ai, overall_chain
 import google.generativeai as genai
 from todo_app.database import conversation_collection
+from .tools import run_agent
 
 router=APIRouter()
 
@@ -25,3 +26,13 @@ async def summarize_translate(request: SummarizeRequest, current_user: dict = De
         "summary": result["summary"],
         "hindi_translation": result["hindi_translation"]
     }
+
+class AgentRequest(BaseModel):
+    query: str
+
+@router.post("/api/v1/agent")
+async def agent_endpoint(
+    request:AgentRequest,
+    current_user:dict=Depends(get_current_user)):
+    result = run_agent(request.query)
+    return {"response":result}
